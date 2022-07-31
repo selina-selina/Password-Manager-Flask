@@ -1,0 +1,179 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+
+
+
+<!------   main content block start   ------>
+
+{% block content%}
+
+
+<!-- large screen -->
+<div class="container-sm justify-content-between d-none d-sm-block" style="margin-top: 8rem;">
+  <!--password cards-->
+<div class=" ms-2 col-sm ">
+{% for note in user.notes %}
+  <div class="d-inline-flex justify-content-evenly p-2" style="max-width:230px;">
+    <div class="card" style="background-color: #2b2d42;width:220px;">
+      <div class="card-body">
+        <h6 class="card-title mb-3" style="color: #dbdbdb;">
+          <i class="fa-brands fa-{{note.data.lower()}} text-light mx-3"></i>
+            {{note.data.lower()}}</h6>
+        <p class="card-text mb-3 textmuted" style="color: #8d99ae;font-size:13px;">{{note.username}}</p>
+        <p class="card-text p-2 rounded font-monospace" id="genpassword" style="color: #8d99ae; font-size: 15px;background: #36385c; ">{{note.key}}</p>
+        <!-- <a href="" class="btn btn-primary">copy</a> -->
+        <a href="" onclick="deleteNote( {{note.id}} )" class="btn btn-primary">Delete</a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+
+<!-- create password form -->
+
+<!-- <div class="d-none d-md-block container ms-3 col-4 p-3 d-flex align-items-center justify-content-center text-dark bg-light rounded" style="display:block;position:fixed;right: 1rem;top:9rem;">
+  <form method="POST">
+    <div class="mb-3">
+    <h3 class="mb-2">Create a Password</h3><br>
+    <label for="exampleInputEmail1" class="form-label">Website/App Name</label>
+    <input name="note" id="note" class="form-control" aria-describedby="emailHelp" placeholder="Enter website title">
+    </div>
+    <div id="emailHelp" class="form-text"></div>
+
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label" >username</label>
+    <input name="siteusername" type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter username">
+  </div>
+  <button type="submit" class="btn btn-primary">Add password</button>
+</form>
+</div> -->
+
+  <div class="d-block">
+  <i class="fa-3x fa-solid fa-circle-plus position-fixed bottom-0 end-0" style=" margin: 5rem 2rem; position:fixed;" data-bs-toggle="modal" data-bs-target="#enroll"></i>
+  </div>
+  
+</div>
+
+<!-- mobile view -->
+<div class="container-fluid d-sm-none d-block margin-top">
+  {% for note in user.notes %}
+<!-- 
+  <div class="d-flex flex-row cursor-pointer mt-4 shadow-sm rounded p-2 mobile-pass" data-pass-id="{{note.id}}">
+      <div class="col-2 text-center">
+        <i class="fa-brands fa-{{note.data.lower()}} fs fa-2x mt-1"></i> 
+      </div>
+      <div class="col-8 d-flex flex-column">
+        <h5 class="card-title">{{note.data}}</h5> 
+        <p class="text-muted card-text">{{note.username}}</p>
+      </div>
+      <div class="col-2 offset-1 mt-1">
+        <i class="fa-solid fa-lg fa-ellipsis-vertical"></i>
+      </div>
+  </div> -->
+  <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+      <div class="d-flex flex-row cursor-pointer mt-4 shadow-sm rounded p-2 mobile-pass" data-bs-toggle="collapse" data-bs-target="#accordian{{note.id}}">
+        <div class="col-2 text-center">
+          <i class="fa-brands fa-{{note.data.lower()}} fs fa-2x mt-1"></i> 
+        </div>
+        <div class="col-8 d-flex flex-column">
+          <h5 class="card-title">{{note.data}}</h5> 
+          <p class="text-muted card-text">{{note.username}}</p>
+        </div>
+        <div class="col-2 offset-1 mt-1">
+          <i class="fa-solid fa-lg fa-ellipsis-vertical" data-bs-toggle="collapse" data-bs-target="#accordian{{note.id}}" ></i>
+        </div>
+      </div>
+      <!-- <h2 class="accordion-header" id="flush-headingOne"> -->
+        <!-- <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordian{{note.id}}" aria-expanded="false" aria-controls="flush-collapseOne">
+          Accordion Item #1
+        </button> -->
+      <!-- </h2> -->
+      <div id="accordian{{note.id}}" class="accordion-collapse collapse p-2" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="background: #f4f4f4;">
+        <div class="card text-dark pt-2 px-3 ">
+          <p class="card-title text-muted">Email or Username</p>
+          <p class="text-dark" id="genpassword" style="font-size: 16px; ">{{note.username}}</p>
+        </div>
+        <div class="card text-dark pt-2 px-3 mt-2">
+          <p class="card-title text-muted">Password</p>
+          <p class="text-dark rounded font-monospace" id="genpassword" style="font-size: 16px; ">{{note.key}}</p>
+        </div>
+        <div class="card mt-2 offset-6">
+        <a href="" onclick="deleteNote( {{note.id}} )" class="btn btn-outline-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+    </div>
+  {% endfor %}
+
+</div>
+</div>
+<!-- mobile view -->
+
+
+<!-- modal large add password-->
+<div class="modal fade" id="enroll" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- <p class="lead">Fill out this form we will get back to you</p> -->
+
+        <!-- <div class="mb-3">
+        <form action="">
+          <label for="first-name" class="col-form-label">Name: </label>
+          <input type="text" class="form-control" id="firstname">
+        </form>
+      </div>
+
+      <div class="mb-3">
+          <label for="first-name" class="col-form-label">Email: </label>
+          <input type="text" class="form-control" id="email">
+        </form>
+      </div>
+      <div class="mb-3">
+          <label for="first-name" class="col-form-label">Mobile: </label>
+          <input type="text" class="form-control" id="mobile">
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div> -->
+      <form method="POST">
+        <div class="mb-3">
+        <!-- <h3 class="mb-2">Create a Password</h3><br> -->
+        <label for="exampleInputEmail1" class="form-label">App name or site name</label>
+        <input name="note" id="note" class="form-control" aria-describedby="emailHelp" placeholder="Instagram, Twitter, Snapchat">
+        </div>
+        <div id="emailHelp" class="form-text"></div>
+    
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label" >Username</label>
+        <input name="siteusername" type="text" class="form-control" id="exampleInputPassword1" placeholder="username">
+      </div>
+      <div class="divider d-flex align-items-center my-4">
+        <p class="text-center mx-3 mb-0 text-muted" style="font-size: 13px;">Your password will be auto-generated </p>
+      </div> 
+      <!-- <p class="text-secondary" style="font-size: 13px;">Your password will autogenerated</p> -->
+      <button type="submit" class="btn btn-primary mb-2">Add password</button>
+    </form>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal end -->
+<div class="d-sm-none d-flex justify-content-center  d-flex container-fluid fixed-bottom p-2 bg-gray">
+  <div class="text-center col-4" data-bs-toggle="modal" data-bs-target="#enroll">
+    <i class="fa-solid fa-circle-plus fa-3x p-2"></i>
+    <!-- <p class="card-title" >Add </p> -->
+  </div>
+</div>
+
+{% endblock %}
